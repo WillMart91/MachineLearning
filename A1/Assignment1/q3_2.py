@@ -15,11 +15,10 @@ from q1_1 import rmse
         # b (float): Final bias after gradient descent optimization.
         # loss_data (list): List of loss values at each epoch.
 def gradient_descent_regression(X, y, reg_type='simple', hyperparameter=0.0, learning_rate=0.01, num_epochs=100):
-
     np.random.seed(42)  
-    n, m = X.shape
-    w = np.random.normal(0, 1, size=(m, 1))  #w = np.zeros((m,1)) to start from the "zero" point
-
+    n_exemples, n_features = X.shape
+    w = np.random.normal(0, 1, size=(n_features,))  #w.shape = (n_features,)
+    y = y.squeeze() # y.shape = (n_exemples,)
     b = 0
     loss_data = []
 
@@ -28,19 +27,24 @@ def gradient_descent_regression(X, y, reg_type='simple', hyperparameter=0.0, lea
             grad_w, grad_b = compute_gradient_simple(X, y, w, b)
         elif reg_type == 'ridge':
             grad_w, grad_b = compute_gradient_ridge(X, y, w, b, hyperparameter)
+        else :
+            raise ValueError("Invalid regression type. Must be 'simple' or 'ridge'.")
 
         w = w - learning_rate * grad_w
         b = b - learning_rate * grad_b
 
         loss_data.append(computeLoss(X, y, reg_type, w, b, hyperparameter))
 
+    if(w.shape[0] != n_features): 
+        raise ValueError("The shape of w is not correct, the shape is currently: " + str(w.shape) + " and should be: (" + str(n_features) + ",)")
+    
     return w, b, loss_data
 
-def computeLoss(X, y, reg_type, w, b, hyperparameter):
+def computeLoss(X, y, reg_type, w, b, hyperparameter): 
     y_pred = np.dot(X, w) + b
     if reg_type == 'simple':
-        loss = np.mean((y_pred - y) ** 2) # 2/n ? or just *2 cuz mean divides by n
+        loss = np.mean((y_pred - y) ** 2)
     elif reg_type == 'ridge':
-        loss = np.mean((y_pred - y) ** 2) + hyperparameter * np.sum(w ** 2)  # 2/n ?
+        loss = np.mean((y_pred - y) ** 2) + hyperparameter * np.sum(w ** 2)  
 
     return loss

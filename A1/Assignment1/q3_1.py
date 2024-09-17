@@ -12,7 +12,7 @@ import numpy as np
 # Returns:
 #     grad_w (np.ndarray): Gradient with respect to weights.
 #     grad_b (float): Gradient with respect to bias.
-def compute_gradient_simple(X, y, w, b):
+def compute_gradient_simple(X, y, w, b): #For MSE
 
     y_pred = np.dot(X, w) + b
     n = X.shape[0]

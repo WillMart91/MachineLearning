@@ -3,6 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler
 from q1_1 import rmse
+from q1_1 import data_matrix_bias
 from q3_1 import compute_gradient_ridge, compute_gradient_simple
 from q3_2 import gradient_descent_regression
 from q3_2 import computeLoss
@@ -16,7 +17,7 @@ y_test = pd.read_csv('Data/y_test.csv').values
 # Hyperparameters
 num_epochs = 1000
 ridge_hyperparameter = 0.05
-learning_rates = [0.0001, 0.001, 0.01, 0.05, 0.1, 0.2, 0.5]  # Different learning rates to try
+learning_rates = [0.0001, 0.001, 0.01, 0.05, 0.1, 0.2] #0.5, 1 # Different learning rates to try
 
 # Now, try different values for ‘learning rate‘ hyperparameter. Plot the training loss after each epoch,
 # and the RMSE versus the ‘learning rate‘ for both linear and ridge regression on the test dataset. 
@@ -25,7 +26,10 @@ learning_rates = [0.0001, 0.001, 0.01, 0.05, 0.1, 0.2, 0.5]  # Different learnin
 scaler = StandardScaler()
 X_train = scaler.fit_transform(X_train)
 X_test = scaler.transform(X_test)
+
 ## Maybe add bias from 1_1 ???????????
+X_train = data_matrix_bias(X_train)
+X_test = data_matrix_bias(X_test)
 
 training_loss_data_data_simple = []
 training_loss_data_data_ridge = []
@@ -69,5 +73,4 @@ plt.ylabel('RMSE')
 plt.title('RMSE vs Learning Rate for Simple and Ridge Regression')
 plt.legend()
 plt.grid(True)
-plt.ylim(0, 40000)
 plt.show()
